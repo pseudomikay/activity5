@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {box-sizing: border-box}
+body {font-family: Verdana, sans-serif; margin:0; background-color: #ffe6f2;}
+img {vertical-align: middle;}
+
+.slideshow-container {
+  width: 100vw;
+  height: 90vh;
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  background-color: #ffb3d9;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(255, 105, 180, 0.3);
+}
+
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -22px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+  background-color: #ff66b2;
+}
+
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+.prev:hover, .next:hover {
+  background-color: #ff3385;
+}
+
+.text {
+  color: white;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+  background: rgba(255, 102, 178, 0.7);
+  border-radius: 5px;
+}
+
+.numbertext {
+  color: white;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+.dot {
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #ffb3d9;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active, .dot:hover {
+  background-color: #ff3385;
+}
+
+.fade {
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+@media only screen and (max-width: 300px) {
+  .prev, .next,.text {font-size: 11px}
+}
+</style>
+</head>
+<body>
+
+<div class="slideshow-container" id="slideshow-container">
+  <a class="prev" onclick="plusSlides(-1)">❮</a>
+  <a class="next" onclick="plusSlides(1)">❯</a>
+</div>
+<br>
+<div style="text-align:center" id="dots-container"></div>
+
+<script>
+
+const xmlString = `
+<slideshow>
+  <slide>
+    <image>https://www.littledogsocialmedia.com/wp-content/uploads/2019/05/Winter_2024_Little_Dog_Website_Sliders-1.jpg</image>
+    <caption>Little Dog</caption>
+  </slide>
+  <slide>
+    <image>https://www.littledogsocialmedia.com/wp-content/uploads/2019/05/Team_Collage_Slider.jpg</image>
+    <caption>Little Dog</caption>
+  </slide>
+  <slide>
+    <image>https://www.littledogsocialmedia.com/wp-content/uploads/2019/05/3-4.png</image>
+    <caption>Little Dog</caption>
+  </slide>
+  <slide>
+    <image>https://www.littledogsocialmedia.com/wp-content/uploads/2019/05/4-4.png</image>
+    <caption>Little Dog</caption>
+  </slide>
+</slideshow>
+`;
+
+const parser = new DOMParser();
+const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+
+const slides = xmlDoc.getElementsByTagName("slide");
+const slideshowContainer = document.getElementById("slideshow-container");
+const dotsContainer = document.getElementById("dots-container");
+
+for (let i = 0; i < slides.length; i++) {
+  const slideElement = document.createElement("div");
+  slideElement.className = "mySlides fade";
+  
+  const numberText = document.createElement("div");
+  numberText.className = "numbertext";
+  numberText.textContent = (i + 1) + " / " + slides.length;
+
+  const img = document.createElement("img");
+  img.src = slides[i].getElementsByTagName("image")[0].textContent;
+  img.style.width = "100%";
+
+  const textElement = document.createElement("div");
+  textElement.className = "text";
+  textElement.textContent = slides[i].getElementsByTagName("caption")[0].textContent;
+  
+  slideElement.appendChild(numberText);
+  slideElement.appendChild(img);
+  slideElement.appendChild(textElement);
+  
+  slideshowContainer.insertBefore(slideElement, slideshowContainer.firstChild);
+  
+  const dot = document.createElement("span");
+  dot.className = "dot";
+  dot.onclick = function() { currentSlide(i + 1); };
+  dotsContainer.appendChild(dot);
+}
+
+let slideIndex = 1;
+showSlides(slideIndex);
+
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  let i;
+  let slides = document.getElementsByClassName("mySlides");
+  let dots = document.getElementsByClassName("dot");
+  if (n > slides.length) {slideIndex = 1}    
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";  
+  }
+  for (i = 0; i < dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";  
+  dots[slideIndex-1].className += " active";
+}
+</script>
+
+</body>
+</html>
